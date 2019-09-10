@@ -1,0 +1,31 @@
+# Sample Json Input for Keyword Based
+{
+	"consumer_key": "Y87MWneNyN18ny32UZQQIg",
+  "consumer_secret": "03v1r5GNA5gyfxJMeJIcoJn7PGgCIuXMImP2mMZN5g",
+  "token": "326146455-5p0UCnpy7yKSVpp6ibBlVtb3UnjIUBSdRxUgHOkX",
+  "token_secret": "aVJ4xKpWycEk3acf1bGDuygPEzFPh8RPXmsd6fMSU",
+	"twitter_keywords":[
+		{
+		"keywords_list":[]
+		}
+	]
+	
+}
+
+
+# Sample Json Input for Location Based
+{
+	"consumer_key": "Y87MWneNyN18ny32UZQQIg",
+  "consumer_secret": "03v1r5GNA5gyfxJMeJIcoJn7PGgCIuXMImP2mMZN5g",
+  "token": "326146455-5p0UCnpy7yKSVpp6ibBlVtb3UnjIUBSdRxUgHOkX",
+  "token_secret": "aVJ4xKpWycEk3acf1bGDuygPEzFPh8RPXmsd6fMSU",
+	"bounding_box":[
+		{"location":"",
+			"lngSW":"",
+			"latSW":"",
+			"lngNE":"",
+			"latNE":""
+		}
+	]
+	
+}
