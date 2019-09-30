@@ -6,6 +6,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.gmu.hsil.crawlers.StockService;
 import com.gmu.hsil.crawlers.TwitterBboxBasedCrawler;
 import com.gmu.hsil.crawlers.TwitterKeywordBasedCrawler;
 import com.gmu.hsil.model.ConfigurationRequest;
@@ -23,6 +24,9 @@ public class StartupController {
 	
 	@Autowired
 	TwitterBboxBasedCrawler bboxBasedCrawler;
+	
+	@Autowired
+	StockService stockService;
 
 	@PostMapping("/producer/initiate")
 	public void initiateRequest(@RequestBody ConfigurationRequest configuration) {
@@ -33,6 +37,10 @@ public class StartupController {
 			
 			if(configuration.getBounding_box()!=null && configuration.getBounding_box().size()>0) {
 				bboxBasedCrawler.crawl(configuration);
+			}
+			
+			if(configuration.getStock_quote()!=null) {
+				stockService.getStocks(configuration);
 			}
 		}
 	}

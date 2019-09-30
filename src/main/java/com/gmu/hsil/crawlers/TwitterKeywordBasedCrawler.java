@@ -41,13 +41,17 @@ public class TwitterKeywordBasedCrawler implements Crawler{
 	@Autowired
 	KafkaService kafkaService;
 	
-	private final static String TOPIC = "twitter";
+	private static String TOPIC = "twitter";
 
 
 	@Override
 	public void crawl(ConfigurationRequest configuration) {
 
 		List<KeywordRequest> keywordsList = (List<KeywordRequest>) configuration.getTwitter_keywords();
+		
+		if(configuration.getKafka_topic()!=null) {
+			TOPIC = configuration.getKafka_topic();
+		}
 
 		for(KeywordRequest keyword : keywordsList) {
 			ExecutorService executorService = Executors.newFixedThreadPool(1);
@@ -77,9 +81,10 @@ public class TwitterKeywordBasedCrawler implements Crawler{
 		while(true) {
 			try {
 				while(!queue.isEmpty()) {
-					LOGGER.info(queue.take());
-					//message = new KeyedMessage<String, String>(TOPIC, queue.take());
-					//kafkaProducer.send(message);
+					String take = queue.take();
+					//LOGGER.info(take);
+					message = new KeyedMessage<String, String>(TOPIC, take);
+					kafkaProducer.send(message);
 				}
 			}catch(Exception e) {
 				e.printStackTrace();	

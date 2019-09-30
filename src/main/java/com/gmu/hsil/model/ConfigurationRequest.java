@@ -7,10 +7,7 @@ import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class ConfigurationRequest implements Serializable{
-
-	/**
-	 * 
-	 */
+	
 	private static final long serialVersionUID = 1L;
 
 	@SerializedName("consumer_key")
@@ -36,7 +33,28 @@ public class ConfigurationRequest implements Serializable{
 	@SerializedName("bounding_box")
 	@Expose
 	private List<Bbox> bounding_box = null;
+	
+	@SerializedName("stock_quote")
+	@Expose
+	private String stock_quote;
+	
+	@SerializedName("kafka_topic")
+	@Expose
+	private String kafka_topic;
 
+	public String getKafka_topic() {
+		return kafka_topic;
+	}
+	public void setKafka_topic(String kafka_topic) {
+		this.kafka_topic = kafka_topic;
+	}
+	
+	public String getStock_quote() {
+		return stock_quote;
+	}
+	public void setStock_quote(String stock_quote) {
+		this.stock_quote = stock_quote;
+	}
 	public String getConsumer_key() {
 		return consumer_key;
 	}
@@ -80,6 +98,5 @@ public class ConfigurationRequest implements Serializable{
 				+ ", token=" + token + ", token_secret=" + token_secret + ", twitter_keywords=" + twitter_keywords
 				+ ", bounding_box=" + bounding_box + "]";
 	}
-	
 
 }

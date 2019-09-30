@@ -47,7 +47,6 @@ public class TwitterAuthService {
 		.setOAuthAccessToken(configuration.getToken())
 		.setOAuthAccessTokenSecret(configuration.getToken_secret());
 
-
 		TwitterStream twitterStream = new TwitterStreamFactory(configurationBuilder.build()).getInstance();
 
 		return twitterStream;

@@ -29,3 +29,33 @@
 	]
 	
 }
+
+
+{
+	"consumer_key": "Y87MWneNyN18ny32UZQQIg",
+  "consumer_secret": "03v1r5GNA5gyfxJMeJIcoJn7PGgCIuXMImP2mMZN5g",
+  "token": "326146455-5p0UCnpy7yKSVpp6ibBlVtb3UnjIUBSdRxUgHOkX",
+  "token_secret": "aVJ4xKpWycEk3acf1bGDuygPEzFPh8RPXmsd6fMSU",
+	"stock_quote":"COF"
+	
+	
+}
+
+
+
+
+{
+	"consumer_key": "pRsATm3a6hsOTByDmJnpN096O",
+  "consumer_secret": "oZM18cRfHccvWUkCMha55pMAug7iZsNysNrpGLqdlcKNLrGdbQ",
+  "token": "830712945701056513-J9fCdyGoHeWJYHaWFL43wn31DfNvANt",
+  "token_secret": "NoMEHqhOpDhEAow4syeYICuFobULvYODmKIJEcDZ8ux2R",
+	"bounding_box":[
+		{"location":"",
+			"lngSW":"",
+			"latSW":"",
+			"lngNE":"",
+			"latNE":""
+		}
+	]
+	
+}

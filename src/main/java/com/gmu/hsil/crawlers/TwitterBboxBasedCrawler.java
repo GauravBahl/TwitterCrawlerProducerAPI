@@ -1,6 +1,8 @@
 package com.gmu.hsil.crawlers;
 
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,6 +13,8 @@ import com.gmu.hsil.model.Bbox;
 import com.gmu.hsil.model.ConfigurationRequest;
 import com.google.gson.Gson;
 
+import kafka.javaapi.producer.Producer;
+import kafka.producer.KeyedMessage;
 import twitter4j.FilterQuery;
 import twitter4j.StallWarning;
 import twitter4j.Status;
@@ -27,9 +31,21 @@ public class TwitterBboxBasedCrawler implements Crawler{
 
 	@Autowired
 	TwitterAuthService authService;
+	
+	@Autowired
+	KafkaService kafkaService;
+	
+	private static String TOPIC = "boundingbox";
+
 
 	@Override
 	public void crawl(ConfigurationRequest configuration) {
+		
+		if(configuration.getKafka_topic()!=null) {
+			TOPIC = configuration.getKafka_topic();
+		}
+		
+		ExecutorService executorService = Executors.newFixedThreadPool(1);
 
 		TwitterStream twitterStream = authService.getTwitterClient(configuration);
 
@@ -43,25 +59,37 @@ public class TwitterBboxBasedCrawler implements Crawler{
 			double lngNE = bb.getLngNE();
 			double latNE = bb.getLatNE();
 			
-			tweetFilterQuery.locations(new double[][]{new double[] {-94.174805,29.190533},
-				{-90.043945,32.990236}
-			});
-			
-//			tweetFilterQuery.locations(new double[][] {
-//				new double[] {lngSW, latSW},{lngNE,latNE}
+//			tweetFilterQuery.locations(new double[][]{new double[] {-77.448120,38.752477},
+//				{-77.099991,38.896911}
 //			});
 			
+			//-77.448120,38.752477,-77.099991,38.896911
+			
+			tweetFilterQuery.locations(new double[][] {
+				new double[] {lngSW, latSW},{lngNE,latNE}
+			});
+			
 			tweetFilterQuery.language(new String[]{"en"}); 
+			
+			Producer<String, String> kafkaProducer = kafkaService.getKafkaProducer();
+			
+			executorService.execute(new Runnable() {
+				@Override
+				public void run() {
+					twitterBoundingBoxCrawler(twitterStream,
+							tweetFilterQuery, kafkaProducer);	
+				}
+			});
 
-			twitterBoundingBoxCrawler(twitterStream, tweetFilterQuery);
 		}
-
 
 
 	}
 
-	private void twitterBoundingBoxCrawler(TwitterStream twitterStream, FilterQuery tweetFilterQuery) {
-
+	private void twitterBoundingBoxCrawler(TwitterStream twitterStream,
+			FilterQuery tweetFilterQuery, 
+			Producer<String, String> kafkaProducer) {
+		
 		twitterStream.addListener(new StatusListener() {
 
 			@Override
@@ -78,7 +106,12 @@ public class TwitterBboxBasedCrawler implements Crawler{
 
 			@Override
 			public void onStatus(Status status) {
-				LOGGER.info(gson.toJson(status));
+				
+				String json = gson.toJson(status);
+				KeyedMessage<String, String> message  = 
+						new KeyedMessage<String, String>(TOPIC, json);
+				kafkaProducer.send(message);
+				//LOGGER.info(json);
 			}
 
 			@Override
@@ -99,8 +132,9 @@ public class TwitterBboxBasedCrawler implements Crawler{
 
 			}
 		});
-
+		
 		twitterStream.filter(tweetFilterQuery);
+
 	}
 
 }
